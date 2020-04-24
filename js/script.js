@@ -5,7 +5,7 @@ class Keyboard {
         ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight'],
         ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Backslash', 'Enter'],
         ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ArrowUp', 'ShiftRight'],
-        ['ControlLeft', 'AltLeft', 'CommandLeft', 'Space', 'CommandRight', 'AltRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+        ['ControlLeft', 'AltLeft', 'Command', 'Space', 'Command', 'AltRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
       ];
   
       this.engLowerCase = [
@@ -45,9 +45,11 @@ class Keyboard {
         clicked: undefined,
       };
     }
-  
+    
+    //Отрисовка элементов 
+
     createKeyboard() {
-      const content = document.createElement('div');
+      const content = document.createElement('div'); // ?ошибка
       content.classList.add('content');
   
       const keyboard = document.createElement('div');
@@ -67,7 +69,9 @@ class Keyboard {
   
       this.textarea = textarea;
     }
-  
+    
+    //Добавление классов кнопкам
+
     fillKeyCodes() {
       const codes = this.eventCodes;
       for (let i = 0; i < codes.length; i++) {
@@ -87,7 +91,7 @@ class Keyboard {
             case 'Enter':
             case 'CapsLock':
             case 'ShiftLeft':
-            case 'CommandLeft':
+            case 'Command':
               key.classList.add('long');
               break;
             case 'ControlRight':
@@ -109,7 +113,7 @@ class Keyboard {
   
       buttons.forEach((a, i) => a.innerHTML = newLayout[i]);
     }
-  
+    
     keyboardOrMouseCheck(event) {
       if (event.code === undefined) {
         return event.target
@@ -155,8 +159,8 @@ class Keyboard {
       window.onmouseup = this.release.bind(this);
     }
   
-    langChanger() {
-      if (document.querySelector('.CommandLeft').className.includes('active') && document.querySelector('.AltLeft').className.includes('active')) {
+    langChanger() {//Ошибка в смене языка строка 163 .className of null
+      if (document.querySelector('.Command').className.includes('active') && document.querySelector('.AltLeft').className.includes('active')) {
         if (localStorage.getItem('isEng') === 'true') {
           this.keyboardStateUpdate(false);
   
@@ -176,7 +180,9 @@ class Keyboard {
         }
       }
     }
-  
+
+    //события нажатия на спецклавиши
+
     space(event) {
       event.preventDefault();
   
@@ -255,24 +261,6 @@ class Keyboard {
       }
     }
   
-    deleteKey(event) {
-      event.preventDefault();
-      this.addActive(this.keyboardOrMouseCheck(event));
-  
-      const start = this.textarea.selectionStart;
-      const end = this.textarea.selectionEnd;
-  
-      if (this.textarea.value === '') {
-        return;
-      }
-  
-      if (start === end) {
-        this.textarea.setRangeText('', start, end + 1);
-      } else {
-        this.textarea.setRangeText('', start, end);
-      }
-    }
-  
     addSymbol(event) {
       event.preventDefault();
   
@@ -282,12 +270,12 @@ class Keyboard {
       this.addActive(this.keyboardOrMouseCheck(event));
       this.textarea.setRangeText(this.keyboardOrMouseCheck(event).textContent, start, end, 'end');
     }
-  
+    
     push(event) {
       document.querySelector('.textwindow').focus();
       this.keyboardState.clicked = event.target;
   
-      if (this.keyboardOrMouseCheck(event).className.includes('Space')) {
+      if (this.keyboardOrMouseCheck(event).className.includes('Space')) { // ошибка .className of null
         this.space(event);
       } else if (this.keyboardOrMouseCheck(event).className.includes('Tab')) {
         this.tab(event);
@@ -295,18 +283,17 @@ class Keyboard {
         this.enter(event);
       } else if (this.keyboardOrMouseCheck(event).className.includes('CapsLock')) {
         this.capslock(event);
-      } else if (this.keyboardOrMouseCheck(event).className.includes('ShiftLeft') || this.keyboardOrMouseCheck(event).className.includes('ShiftRight')) {
+      } else if (this.keyboardOrMouseCheck(event).className.includes('Command')) {
         this.commandDown(event);
       } else if (this.keyboardOrMouseCheck(event).className.includes('Backspace')) {
         this.backspace(event);
       } else if (this.keyboardOrMouseCheck(event).className.includes('ControlLeft')
       || this.keyboardOrMouseCheck(event).className.includes('ControlRight')
       || this.keyboardOrMouseCheck(event).className.includes('AltLeft')
-      || this.keyboardOrMouseCheck(event).className.includes('AltRight')
-      || this.keyboardOrMouseCheck(event).className.includes('Command')) {
+      || this.keyboardOrMouseCheck(event).className.includes('AltRight')) {
         event.preventDefault();
         this.keyboardOrMouseCheck(event).classList.add('active');
-      } else if (this.keyboardOrMouseCheck(event).className.includes('key ')) {
+      } else if (this.keyboardOrMouseCheck(event).className.includes('key')) {
         this.addSymbol(event);
       }
   
