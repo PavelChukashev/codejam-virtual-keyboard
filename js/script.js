@@ -49,7 +49,7 @@ class Keyboard {
     //Отрисовка элементов 
 
     createKeyboard() {
-      const content = document.createElement('div'); // ?ошибка
+      const content = document.createElement('div'); // ? ошибка: document is not defined
       content.classList.add('content');
   
       const keyboard = document.createElement('div');
@@ -91,13 +91,13 @@ class Keyboard {
             case 'Enter':
             case 'CapsLock':
             case 'ShiftLeft':
-            case 'Command':
               key.classList.add('long');
               break;
             case 'ControlRight':
             case 'ControlLeft':
             case 'Tab':
             case 'ShiftRight':
+            case 'Command':
               key.classList.add('mid');
               break;
           }
